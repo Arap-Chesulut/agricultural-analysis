@@ -16,3 +16,9 @@ Pillow==10.0.0
 matplotlib==3.7.2
 seaborn==0.12.2
 openpyxl==3.1.2
+# Pin these specific versions to avoid conflicts
+pyparsing==2.4.7
+httplib2==0.20.4
+google-auth==2.23.0
+google-auth-httplib2==0.2.0
+google-api-python-client==2.108.0
