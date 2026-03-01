@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detailed Analysis - Agricultural Analysis System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-draw@1.0.4/dist/leaflet.draw.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-leaf me-2"></i>
+                AgriAnalyzer
+                <span class="kenya-badge">Kenya</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dashboard">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/analysis">Analysis</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <div class="bg-light py-4">
+        <div class="container">
+            <h2><i class="fas fa-chart-line me-2"></i>Detailed Analysis Report</h2>
+            <p class="text-muted">Comprehensive agricultural analysis for selected area in Kenya</p>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container py-4">
+        <div class="row">
+            <!-- Sidebar Navigation -->
+            <div class="col-md-3">
+                <div class="sticky-top" style="top: 20px;">
+                    <div class="card">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0"><i class="fas fa-list me-2"></i>Analysis Sections</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="nav flex-column nav-pills" id="analysis-tabs" role="tablist">
+                                <button class="nav-link active mb-2" id="overview-tab" data-bs-toggle="pill" data-bs-target="#overview" type="button">
+                                    <i class="fas fa-home me-2"></i>Overview
+                                </button>
+                                <button class="nav-link mb-2" id="vegetation-tab" data-bs-toggle="pill" data-bs-target="#vegetation" type="button">
+                                    <i class="fas fa-leaf me-2"></i>Vegetation Indices
+                                </button>
+                                <button class="nav-link mb-2" id="crop-tab" data-bs-toggle="pill" data-bs-target="#crop" type="button">
+                                    <i class="fas fa-seedling me-2"></i>Crop Analysis
+                                </button>
+                                <button class="nav-link mb-2" id="soil-tab" data-bs-toggle="pill" data-bs-target="#soil" type="button">
+                                    <i class="fas fa-mountain me-2"></i>Soil Analysis
+                                </button>
+                                <button class="nav-link mb-2" id="yield-tab" data-bs-toggle="pill" data-bs-target="#yield" type="button">
+                                    <i class="fas fa-chart-bar me-2"></i>Yield Estimation
+                                </button>
+                                <button class="nav-link mb-2" id="timeseries-tab" data-bs-toggle="pill" data-bs-target="#timeseries" type="button">
+                                    <i class="fas fa-clock me-2"></i>Time Series
+                                </button>
+                                <button class="nav-link mb-2" id="recommendations-tab" data-bs-toggle="pill" data-bs-target="#recommendations" type="button">
+                                    <i class="fas fa-lightbulb me-2"></i>Recommendations
+                                </button>
+                            </div>
+                            
+                            <hr>
+                            
+                            <div class="mt-3">
+                                <label class="form-label">Select Analysis Date</label>
+                                <input type="date" class="form-control mb-2" id="analysis-date" value="2024-06-15">
+                                <button class="btn btn-success w-100" id="refresh-analysis">
+                                    <i class="fas fa-sync-alt me-2"></i>Refresh Analysis
+                                </button>
+                            </div>
+                            
+                            <div class="mt-3">
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-outline-success" id="download-pdf">
+                                        <i class="fas fa-file-pdf me-2"></i>Download PDF
+                                    </button>
+                                    <button class="btn btn-outline-success" id="download-csv">
+                                        <i class="fas fa-file-csv me-2"></i>Download CSV
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Quick Stats -->
+                    <div class="card mt-3">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0"><i class="fas fa-chart-pie me-2"></i>Quick Stats</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <small class="text-muted">Analysis Area</small>
+                                <h6 id="area-size">582.6 hectares</h6>
+                            </div>
+                            <div class="mb-3">
+                                <small class="text-muted">Average NDVI</small>
+                                <h6 id="avg-ndvi" class="status-good">0.68</h6>
+                            </div>
+                            <div class="mb-3">
+                                <small class="text-muted">Dominant Crop</small>
+                                <h6 id="dominant-crop">Maize (45%)</h6>
+                            </div>
+                            <div class="mb-3">
+                                <small class="text-muted">Soil Type</small>
+                                <h6 id="soil-type">Nitisols</h6>
+                            </div>
+                            <div class="mb-3">
+                                <small class="text-muted">Estimated Yield</small>
+                                <h6 id="est-yield">3.4 tons/ha</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Main Analysis Content -->
+            <div class="col-md-9">
+                <div class="tab-content" id="analysis-tab-content">
+                    
+                    <!-- Overview Tab -->
+                    <div class="tab-pane fade show active" id="overview" role="tabpanel">
+                        <div class="analysis-section">
+                            <div class="section-header">
+                                <h3><i class="fas fa-map-marked-alt me-2"></i>Area Overview</h3>
+                                <span class="badge bg-success">Last updated: June 15, 2024</span>
+                            </div>
+                            
+                            <div class="row mb-4">
+                                <div class="col-md-8">
+                                    <div id="overview-map" style="height: 300px; border-radius: 8px;"></div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card bg-light">
+                                        <div class="card-body">
+                                            <h6>Location Details</h6>
+                                            <table class="table table-sm">
+                                                <tr>
+                                                    <td>Region:</td>
+                                                    <td><strong>Rift Valley, Kenya</strong></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Total Area:</td>
+                                                    <td><strong>582.6 ha</strong></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Agricultural Area:</td>
+                                                    <td><strong>423.8 ha (72.7%)</strong></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Climate Zone:</td>
+                                                    <td><strong>Tropical Highlands</strong></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Elevation:</td>
+                                                    <td><strong>1,500 - 2,500 m</strong></td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="metric-card">
+                                        <i class="fas fa-leaf fa-2x text-success mb-2"></i>
+                                        <div class="metric-value" id="overview-ndvi">0.68</div>
+                                        <div class="metric-label">Average NDVI</div>
+                                        <div class="index-description">Vegetation health</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="metric-card">
+                                        <i class="fas fa-tint fa-2x text-info mb-2"></i>
+                                        <div class="metric-value" id="overview-moisture">0.32</div>
+                                        <div class="metric-label">Soil Moisture</div>
+                                        <div class="index-description">NDMI index</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="metric-card">
+                                        <i class="fas fa-temperature-high fa-2x text-warning mb-2"></i>
+                                        <div class="metric-value" id="overview-temp">24.8°C</div>
+                                        <div class="metric-label">Avg Temperature</div>
+                                        <div class="index-description">Growing season</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="metric-card">
+                                        <i class="fas fa-cloud-rain fa-2x text-primary mb-2"></i>
+                                        <div class="metric-value" id="overview-rain">185mm</div>
+                                        <div class="metric-label">Precipitation</div>
+                                        <div class="index-description">Last 30 days</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="alert alert-info mt-4">
+                                <i class="fas fa-info-circle me-2"></i>
+                                <strong>Analysis Summary:</strong> The Rift Valley region shows healthy vegetation with good soil conditions. Maize is the dominant crop with excellent growth stage. Consider irrigation management in the eastern section where moisture levels are lower.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Vegetation Indices Tab -->
+                    <div class="tab-pane fade" id="vegetation" role="tabpanel">
+                        <div class="analysis-section">
+                            <div class="section-header">
+                                <h3><i class="fas fa-chart-line me-2"></i>Vegetation Indices</h3>
+                                <div>
+                                    <button class="btn btn-sm btn-outline-success me-2" id="compare-indices">
+                                        <i class="fas fa-chart-bar me-1"></i>Compare
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-success" id="export-indices">
+                                        <i class="fas fa-download me-1"></i>Export
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Index Selector -->
+                            <div class="row mb-4">
+                                <div class="col-md-4">
+                                    <label class="form-label">Primary Index</label>
+                                    <select class="form-select" id="primary-index">
+                                        <option value="ndvi" selected>NDVI - Normalized Difference Vegetation Index</option>
+                                        <option value="evi">EVI - Enhanced Vegetation Index</option>
+                                        <option value="savi">SAVI - Soil Adjusted Vegetation Index</option>
+                                        <option value="ndre">NDRE - Red Edge Index</option>
+                                        <option value="gndvi">GNDVI - Green NDVI</option>
+                                        <option value="msavi">MSAVI - Modified SAVI</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Secondary Index</label>
+                                    <select class="form-select" id="secondary-index">
+                                        <option value="none">None</option>
+                                        <option value="ndvi">NDVI</option>
+                                        <option value="evi" selected>EVI</option>
+                                        <option value="savi">SAVI</option>
+                                        <option value="ndre">NDRE</option>
+                                        <option value="gndvi">GNDVI</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Color Palette</label>
+                                    <select class="form-select" id="color-palette">
+                                        <option value="green">Green (Vegetation)</option>
+                                        <option value="redblue">Red-Blue (Stress)</option>
+                                        <option value="thermal">Thermal</option>
+                                        <option value="spectral">Spectral</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <!-- Index Map -->
+                            <div id="index-map" style="height: 400px; margin-bottom: 20px; border-radius: 8px;"></div>
+                            
+                            <!-- Index Statistics -->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6>Index Statistics</h6>
+                                    <table class="table table-bordered comparison-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Metric</th>
+                                                <th>NDVI</th>
+                                                <th>EVI</th>
+                                                <th>SAVI</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Minimum</td>
+                                                <td>-0.12</td>
+                                                <td>-0.06</td>
+                                                <td>-0.10</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Maximum</td>
+                                                <td>0.85</td>
+                                                <td>0.88</td>
+                                                <td>0.82</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Mean</td>
+                                                <td class="status-good">0.68</td>
+                                                <td class="status-good">0.65</td>
+                                                <td class="status-good">0.62</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Std Deviation</td>
+                                                <td>0.16</td>
+                                                <td>0.18</td>
+                                                <td>0.15</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6>Index Distribution</h6>
+                                    <canvas id="index-distribution-chart"></canvas>
+                                </div>
+                            </div>
+                            
+                            <!-- All Indices Table -->
+                            <div class="mt-4">
+                                <h6>All Vegetation Indices</h6>
+                                <div class="table-responsive">
+                                    <table class="table table-sm table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Index</th>
+                                                <th>Formula</th>
+                                                <th>Value</th>
+                                                <th>Interpretation</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><strong>NDVI</strong></td>
+                                                <td>(NIR - RED)/(NIR + RED)</td>
+                                                <td class="status-good">0.68</td>
+                                                <td>Healthy vegetation</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>EVI</strong></td>
+                                                <td>2.5*(NIR-RED)/(NIR+6*RED-7.5*BLUE+1)</td>
+                                                <td class="status-good">0.65</td>
+                                                <td>Reduced atmospheric effects</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>SAVI</strong></td>
+                                                <td>1.5*(NIR-RED)/(NIR+RED+0.5)</td>
+                                                <td class="status-good">0.62</td>
+                                                <td>Soil adjusted</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>MSAVI</strong></td>
+                                                <td>(2*NIR+1-sqrt((2*NIR+1)^2-8*(NIR-RED)))/2</td>
+                                                <td class="status-good">0.67</td>
+                                                <td>Modified soil adjustment</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>NDRE</strong></td>
+                                                <td>(NIR - RE)/(NIR + RE)</td>
+                                                <td class="status-good">0.42</td>
+                                                <td>Chlorophyll content</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>GNDVI</strong></td>
+                                                <td>(NIR - GREEN)/(NIR + GREEN)</td>
+                                                <td class="status-good">0.54</td>
+                                                <td>Water stress detection</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>ARVI</strong></td>
+                                                <td>(NIR - (2*RED-BLUE))/(NIR + (2*RED-BLUE))</td>
+                                                <td class="status-good">0.65</td>
+                                                <td>Atmospherically resistant</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>PSRI</strong></td>
+                                                <td>(RED - GREEN)/RE</td>
+                                                <td class="status-good">0.15</td>
+                                                <td>Early senescence detection</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>CIg</strong></td>
+                                                <td>(NIR/GREEN) - 1</td>
+                                                <td class="status-good">2.9</td>
+                                                <td>Chlorophyll index</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>CIre</strong></td>
+                                                <td>(NIR/RE) - 1</td>
+                                                <td class="status-good">2.5</td>
+                                                <td>Red edge chlorophyll</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Crop Analysis Tab -->
+                    <div class="tab-pane fade" id="crop" role="tabpanel">
+                        <div class="analysis-section">
+                            <div class="section-header">
+                                <h3><i class="fas fa-seedling me-2"></i>Crop Analysis</h3>
+                                <span class="badge bg-success">Growth Stage: Peak</span>
+                            </div>
+                            
+                            <!-- Crop Type Map -->
+                            <div class="row mb-4">
+                                <div class="col-md-8">
+                                    <div id="crop-map" style="height: 350px; border-radius: 8px;"></div>
+                                </div>
+                                <div class="col-md-4">
+                                    <h6>Crop Distribution</h6>
+                                    <canvas id="crop-pie-chart"></canvas>
+                                    <div class="mt-3">
+                                        <table class="table table-sm">
+                                            <tr>
+                                                <td>🌽 Maize:</td>
+                                                <td><strong>45%</strong> (190.7 ha)</td>
+                                            </tr>
+                                            <tr>
+                                                <td>🍃 Tea:</td>
+                                                <td><strong>18%</strong> (76.3 ha)</td>
+                                            </tr>
+                                            <tr>
+                                                <td>🫘 Coffee:</td>
+                                                <td><strong>12%</strong> (50.9 ha)</td>
+                                            </tr>
+                                            <tr>
+                                                <td>🌾 Wheat:</td>
+                                                <td><strong>10%</strong> (42.4 ha)</td>
+                                            </tr>
+                                            <tr>
+                                                <td>🌿 Sugarcane:</td>
+                                                <td><strong>8%</strong> (33.9 ha)</td>
+                                            </tr>
+                                            <tr>
+                                                <td>🌱 Other:</td>
+                                                <td><strong>7%</strong> (29.7 ha)</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Crop Health Metrics -->
+                            <h6 class="mt-4">Crop Health by Type</h6>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="card mb-3">
+                                        <div class="card-header bg-success text-white">Maize</div>
+                                        <div class="card-body">
+                                            <div class="mb-2">
+                                                <small>NDVI: 0.75 <span class="status-good">(Excellent)</span></small>
+                                                <div class="progress">
+                                                    <div class="progress-bar bg-success" style="width: 75%"></div>
+                                                </div>
+                                            </div>
+                                            <div class="mb-2">
+                                                <small>LAI: 3.8 m²/m²</small>
+                                                <div class="progress">
+                                                    <div class="progress-bar bg-success" style="width: 63%"></div>
+                                                </div>
+                                            </div>
+                                            <div class="mb-2">
+                                                <small>Chlorophyll: 40 µg/cm²</small>
+                                                <div class="progress">
+                                                    <div class="progress-bar bg-success" style="width: 80%"></div>
+                                                </div>
+                                            </div>
+                                            <small class="text-muted">Growth Stage: Tasseling</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card mb-3">
+                                        <div class="card-header bg-success text-white">Tea</div>
+                                        <div class="card-body">
+                                            <div class="mb-2">
+                                                <small>NDVI: 0.82 <span class="status-good">(Excellent)</span></small>
+                                                <div class="progress">
+                                                    <div class="progress-bar bg-success" style="width: 82%"></div>
+                                                </div>
+                                            </div>
+                                            <div class="mb-2">
+                                                <small>LAI: 4.5 m²/m²</small>
+                                                <div class="progress">
+                                                    <div class="progress-bar bg-success" style="width: 75%"></div>
+                                                </div>
+                                            </div>
+                                            <div class="mb-2">
+                                                <small>Chlorophyll: 48 µg/cm²</small>
+                                                <div class="progress">
+                                                    <div class="progress-bar bg-success" style="width: 96%"></div>
+                                                </div>
+                                            </div>
+                                            <small class="text-muted">Growth Stage: Harvesting</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card mb-3">
+                                        <div class="card-header bg-warning text-dark">Wheat</div>
+                                        <div class="card-body">
+                                            <div class="mb-2">
+                                                <small>NDVI: 0.58 <span class="status-warning">(Fair)</span></small>
+                                                <div class="progress">
+                                                    <div class="progress-bar bg-warning" style="width: 58%"></div>
+                                                </div>
+                                            </div>
+                                            <div class="mb-2">
+                                                <small>LAI: 2.5 m²/m²</small>
+                                                <div class="progress">
+                                                    <div class="progress-bar bg-warning" style="width: 42%"></div>
+                                                </div>
+                                            </div>
+                                            <div class="mb-2">
+                                                <small>Chlorophyll: 32 µg/cm²</small>
+                                                <div class="progress">
+                                                    <div class="progress-bar bg-warning" style="width: 64%"></div>
+                                                </div>
+                                            </div>
+                                            <small class="text-muted">Growth Stage: Senescence</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Stress Detection -->
+                            <div class="row mt-3">
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-header bg-success text-white">Stress Detection</div>
+                                        <div class="card-body">
+                                            <canvas id="stress-chart"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-header bg-success text-white">Stress by Cause</div>
+                                        <div class="card-body">
+                                            <table class="table">
+                                                <tr>
+                                                    <td>Water Stress:</td>
+                                                    <td>
+                                                        <div class="progress">
+                                                            <div class="progress-bar bg-warning" style="width: 22%">22%</div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Nutrient Stress:</td>
+                                                    <td>
+                                                        <div class="progress">
+                                                            <div class="progress-bar bg-warning" style="width: 18%">18%</div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Pest/Disease:</td>
+                                                    <td>
+                                                        <div class="progress">
+                                                            <div class="progress-bar bg-success" style="width: 12%">12%</div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Temperature:</td>
+                                                    <td>
+                                                        <div class="progress">
+                                                            <div class="progress-bar bg-success" style="width: 8%">8%</div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Soil Analysis Tab -->
+                    <div class="tab-pane fade" id="soil" role="tabpanel">
+                        <div class="analysis-section">
+                            <div class="section-header">
+                                <h3><i class="fas fa-mountain me-2"></i>Soil Analysis</h3>
+                                <span class="badge bg-success">Fertility: Good</span>
+                            </div>
+                            
+                            <!-- Soil Type Map -->
+                            <div class="row mb-4">
+                                <div class="col-md-7">
+                                    <div id="soil-map" style="height: 350px; border-radius: 8px;"></div>
+                                </div>
+                                <div class="col-md-5">
+                                    <h6>Soil Type Distribution</h6>
+                                    <canvas id="soil-bar-chart"></canvas>
+                                    <table class="table table-sm mt-3">
+                                        <tr>
+                                            <td>🟫 Nitisols:</td>
+                                            <td><strong>35%</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td>🟨 Andosols:</td>
+                                            <td><strong>25%</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td>🟧 Ferralsols:</td>
+                                            <td><strong>20%</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td>🟫 Cambisols:</td>
+                                            <td><strong>12%</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td>⬜ Other:</td>
+                                            <td><strong>8%</strong></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <!-- Soil Properties -->
+                            <h6 class="mt-4">Soil Properties</h6>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="metric-card">
+                                        <i class="fas fa-droplet fa-2x text-primary mb-2"></i>
+                                        <div class="metric-value">32%</div>
+                                        <div class="metric-label">Moisture Content</div>
+                                        <div class="index-description">Optimal for crops</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="metric-card">
+                                        <i class="fas fa-flask fa-2x text-success mb-2"></i>
+                                        <div class="metric-value">5.8 pH</div>
+                                        <div class="metric-label">Soil pH</div>
+                                        <div class="index-description">Slightly acidic</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="metric-card">
+                                        <i class="fas fa-mountain fa-2x text-warning mb-2"></i>
+                                        <div class="metric-value">3.2%</div>
+                                        <div class="metric-label">Organic Matter</div>
+                                        <div class="index-description">Moderate</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="metric-card">
+                                        <i class="fas fa-weight-hanging fa-2x text-info mb-2"></i>
+                                        <div class="metric-value">1.28 g/cm³</div>
+                                        <div class="metric-label">Bulk Density</div>
+                                        <div class="index-description">Good structure</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Mineral Content -->
+                            <h6 class="mt-4">Mineral Content</h6>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <table class="table">
+                                        <tr>
+                                            <th>Mineral</th>
+                                            <th>Content</th>
+                                            <th>Status</th>
+                                        </tr>
+                                        <tr>
+                                            <td>Nitrogen (N)</td>
+                                            <td>38 ppm</td>
+                                            <td><span class="status-good">Optimal</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Phosphorus (P)</td>
+                                            <td>22 ppm</td>
+                                            <td><span class="status-warning">Low</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Potassium (K)</td>
+                                            <td>165 ppm</td>
+                                            <td><span class="status-good">Optimal</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Calcium (Ca)</td>
+                                            <td>980 ppm</td>
+                                            <td><span class="status-good">High</span></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="col-md-6">
+                                    <canvas id="mineral-chart"></canvas>
+                                </div>
+                            </div>
+                            
+                            <!-- Soil Indices -->
+                            <h6 class="mt-4">Soil Indices</h6>
+                            <table class="table table-sm">
+                                <tr>
+                                    <th>Index</th>
+                                    <th>Formula</th>
+                                    <th>Value</th>
+                                    <th>Interpretation</th>
+                                </tr>
+                                <tr>
+                                    <td>BSI</td>
+                                    <td>((SWIR1+RED)-(NIR+BLUE))/((SWIR1+RED)+(NIR+BLUE))</td>
+                                    <td>0.22</td>
+                                    <td>Low bare soil exposure</td>
+                                </tr>
+                                <tr>
+                                    <td>Clay Index</td>
+                                    <td>SWIR1/SWIR2</td>
+                                    <td>1.45</td>
+                                    <td>Moderate clay content</td>
+                                </tr>
+                                <tr>
+                                    <td>Iron Oxide</td>
+                                    <td>RED/BLUE</td>
+                                    <td>1.72</td>
+                                    <td>Moderate iron content</td>
+                                </tr>
+                                <tr>
+                                    <td>Ferrous</td>
+                                    <td>SWIR1/NIR</td>
+                                    <td>0.92</td>
+                                    <td>Low ferrous minerals</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Yield Estimation Tab -->
+                    <div class="tab-pane fade" id="yield" role="tabpanel">
+                        <div class="analysis-section">
+                            <div class="section-header">
+                                <h3><i class="fas fa-chart-bar me-2"></i>Yield Estimation</h3>
+                                <span class="badge bg-success">2024 Growing Season</span>
+                            </div>
+                            
+                            <!-- Yield Map -->
+                            <div class="row mb-4">
+                                <div class="col-md-8">
+                                    <div id="yield-map" style="height: 350px; border-radius: 8px;"></div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card bg-light">
+                                        <div class="card-body text-center">
+                                            <h5>Estimated Total Yield</h5>
+                                            <h2 class="text-success">1,450.5 tons</h2>
+                                            <p class="text-muted">Across 423.8 ha</p>
+                                            <hr>
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <small>Average</small>
+                                                    <h6>3.4 t/ha</h6>
+                                                </div>
+                                                <div class="col-6">
+                                                    <small>Range</small>
+                                                    <h6>1.8 - 85 t/ha</h6>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Yield by Crop -->
+                            <h6>Estimated Yield by Crop Type</h6>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <table class="table">
+                                        <tr>
+                                            <th>Crop</th>
+                                            <th>Area (ha)</th>
+                                            <th>Yield (t/ha)</th>
+                                            <th>Total (t)</th>
+                                        </tr>
+                                        <tr>
+                                            <td>Maize</td>
+                                            <td>190.7</td>
+                                            <td>3.2</td>
+                                            <td>610.2</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Tea</td>
+                                            <td>76.3</td>
+                                            <td>2.5</td>
+                                            <td>190.8</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Coffee</td>
+                                            <td>50.9</td>
+                                            <td>1.8</td>
+                                            <td>91.6</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Wheat</td>
+                                            <td>42.4</td>
+                                            <td>2.8</td>
+                                            <td>118.7</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Sugarcane</td>
+                                            <td>33.9</td>
+                                            <td>85.0</td>
+                                            <td>2,881.5</td>
+                                        </tr>
+                                        <tr class="table-success">
+                                            <th>Total</th>
+                                            <th>394.2</th>
+                                            <th>-</th>
+                                            <th>3,892.8</th>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="col-md-6">
+                                    <canvas id="yield-by-crop-chart"></canvas>
+                                </div>
+                            </div>
+                            
+                            <!-- Yield Prediction Factors -->
+                            <div class="row mt-4">
+                                <div class="col-md-12">
+                                    <div class="card">
+                                        <div class="card-header bg-success text-white">
+                                            <i class="fas fa-chart-line me-2"></i>Yield Prediction Factors
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-3 text-center">
+                                                    <h5>Vegetation Health</h5>
+                                                    <h3 class="text-success">82%</h3>
+                                                    <small>NDVI contribution</small>
+                                                </div>
+                                                <div class="col-md-3 text-center">
+                                                    <h5>Soil Fertility</h5>
+                                                    <h3 class="text-success">68%</h3>
+                                                    <small>Based on indices</small>
+                                                </div>
+                                                <div class="col-md-3 text-center">
+                                                    <h5>Weather Impact</h5>
+                                                    <h3 class="text-warning">-5%</h3>
+                                                    <small>Drought adjustment</small>
+                                                </div>
+                                                <div class="col-md-3 text-center">
+                                                    <h5>Historical Trend</h5>
+                                                    <h3 class="text-success">+8%</h3>
+                                                    <small>vs last year</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Time Series Tab -->
+                    <div class="tab-pane fade" id="timeseries" role="tabpanel">
+                        <div class="analysis-section">
+                            <div class="section-header">
+                                <h3><i class="fas fa-clock me-2"></i>Time Series Analysis</h3>
+                                <span class="badge bg-success">2024 Growing Season</span>
+                            </div>
+                            
+                            <!-- Time Series Controls -->
+                            <div class="row mb-4">
+                                <div class="col-md-3">
+                                    <label class="form-label">Index</label>
+                                    <select class="form-select" id="ts-index">
+                                        <option value="ndvi">NDVI</option>
+                                        <option value="evi">EVI</option>
+                                        <option value="ndre">NDRE</option>
+                                        <option value="ndmi">NDMI (Moisture)</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Crop Type</label>
+                                    <select class="form-select" id="ts-crop">
+                                        <option value="all">All Crops</option>
+                                        <option value="maize">Maize</option>
+                                        <option value="tea">Tea</option>
+                                        <option value="coffee">Coffee</option>
+                                        <option value="wheat">Wheat</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Year</label>
+                                    <select class="form-select" id="ts-year">
+                                        <option value="2024">2024</option>
+                                        <option value="2023">2023</option>
+                                        <option value="2022">2022</option>
+                                        <option value="compare">Compare Years</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Smoothing</label>
+                                    <select class="form-select" id="ts-smooth">
+                                        <option value="none">None</option>
+                                        <option value="savgol" selected>Savitzky-Golay</option>
+                                        <option value="moving">Moving Average</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <!-- Main Time Series Chart -->
+                            <canvas id="timeseries-main-chart" style="height: 400px;"></canvas>
+                            
+                            <!-- Phenology Metrics -->
+                            <div class="row mt-4">
+                                <div class="col-md-12">
+                                    <h6>Phenological Metrics</h6>
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Metric</th>
+                                                <th>Maize</th>
+                                                <th>Tea</th>
+                                                <th>Coffee</th>
+                                                <th>Wheat</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Start of Season</td>
+                                                <td>Mar 20</td>
+                                                <td>Feb 10</td>
+                                                <td>Mar 05</td>
+                                                <td>Apr 01</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Peak NDVI</td>
+                                                <td>0.75 (Jun 15)</td>
+                                                <td>0.82 (May 20)</td>
+                                                <td>0.71 (Jul 10)</td>
+                                                <td>0.58 (Jun 30)</td>
+                                            </tr>
+                                            <tr>
+                                                <td>End of Season</td>
+                                                <td>Aug 30</td>
+                                                <td>Dec 15</td>
+                                                <td>Nov 20</td>
+                                                <td>Aug 15</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Season Length</td>
+                                                <td>163 days</td>
+                                                <td>308 days</td>
+                                                <td>260 days</td>
+                                                <td>136 days</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Growth Rate</td>
+                                                <td>0.014/day</td>
+                                                <td>0.009/day</td>
+                                                <td>0.011/day</td>
+                                                <td>0.013/day</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <!-- Seasonal Profile -->
+                            <div class="row mt-4">
+                                <div class="col-md-6">
+                                    <h6>Seasonal Profile by Crop</h6>
+                                    <canvas id="seasonal-profile-chart"></canvas>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6>Year-over-Year Comparison</h6>
+                                    <canvas id="yoy-chart"></canvas>
+                                </div>
+                            </div>
+                            
+                            <!-- Anomaly Detection -->
+                            <div class="alert alert-warning mt-4">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                <strong>Anomaly Detected:</strong> NDVI values in early June are 8% below 5-year average. Possible delayed planting or early season stress in maize growing areas.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Recommendations Tab -->
+                    <div class="tab-pane fade" id="recommendations" role="tabpanel">
+                        <div class="analysis-section">
+                            <div class="section-header">
+                                <h3><i class="fas fa-lightbulb me-2"></i>Recommendations</h3>
+                                <span class="badge bg-success">AI-Generated Insights</span>
+                            </div>
+                            
+                            <!-- Priority Actions -->
+                            <div class="row mb-4">
+                                <div class="col-md-4">
+                                    <div class="card border-danger">
+                                        <div class="card-header bg-danger text-white">High Priority</div>
+                                        <div class="card-body">
+                                            <ul class="list-unstyled">
+                                                <li class="mb-3">
+                                                    <i class="fas fa-exclamation-circle text-danger me-2"></i>
+                                                    <strong>Apply nitrogen fertilizer in maize fields</strong>
+                                                    <p class="small text-muted mt-1">45 ha area - Timeline: 7 days</p>
+                                                </li>
+                                                <li class="mb-3">
+                                                    <i class="fas fa-exclamation-circle text-danger me-2"></i>
+                                                    <strong>Irrigation in Eastern region</strong>
+                                                    <p class="small text-muted mt-1">20mm required - Timeline: 3 days</p>
+                                                </li>
+                                                <li class="mb-3">
+                                                    <i class="fas fa-exclamation-circle text-danger me-2"></i>
+                                                    <strong>Tea pest monitoring</strong>
+                                                    <p class="small text-muted mt-1">Kericho region - Immediate</p>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card border-warning">
+                                        <div class="card-header bg-warning text-dark">Medium Priority</div>
+                                        <div class="card-body">
+                                            <ul class="list-unstyled">
+                                                <li class="mb-3">
+                                                    <i class="fas fa-clock text-warning me-2"></i>
+                                                    <strong>Coffee berry borer control</strong>
+                                                    <p class="small text-muted mt-1">Timeline: 14 days</p>
+                                                </li>
+                                                <li class="mb-3">
+                                                    <i class="fas fa-clock text-warning me-2"></i>
+                                                    <strong>Soil sampling in low-yield zones</strong>
+                                                    <p class="small text-muted mt-1">30 cores - Timeline: 2 weeks</p>
+                                                </li>
+                                                <li class="mb-3">
+                                                    <i class="fas fa-clock text-warning me-2"></i>
+                                                    <strong>Sugarcane nutrient management</strong>
+                                                    <p class="small text-muted mt-1">Western Kenya - Timeline: 10 days</p>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card border-success">
+                                        <div class="card-header bg-success text-white">Low Priority</div>
+                                        <div class="card-body">
+                                            <ul class="list-unstyled">
+                                                <li class="mb-3">
+                                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                                    <strong>Harvest planning for wheat</strong>
+                                                    <p class="small text-muted mt-1">August 15-30</p>
+                                                </li>
+                                                <li class="mb-3">
+                                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                                    <strong>Equipment maintenance</strong>
+                                                    <p class="small text-muted mt-1">Sprayer calibration - Next month</p>
+                                                </li>
+                                                <li class="mb-3">
+                                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                                    <strong>Update field records</strong>
+                                                    <p class="small text-muted mt-1">Yield estimates data</p>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Zone-Specific Recommendations -->
+                            <h6 class="mt-4">Zone-Specific Recommendations</h6>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div id="zone-map" style="height: 250px; margin-bottom: 20px;"></div>
+                                </div>
+                            </div>
+                            
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Zone</th>
+                                        <th>Area</th>
+                                        <th>Current Issue</th>
+                                        <th>Recommendation</th>
+                                        <th>Timeline</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Rift Valley</td>
+                                        <td>210 ha</td>
+                                        <td>Moderate drought stress</td>
+                                        <td>Supplemental irrigation</td>
+                                        <td>7 days</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Central Highlands</td>
+                                        <td>156 ha</td>
+                                        <td>Coffee berry borer</td>
+                                        <td>Integrated pest management</td>
+                                        <td>14 days</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Western Kenya</td>
+                                        <td>98 ha</td>
+                                        <td>Nutrient deficiency</td>
+                                        <td>Apply NPK fertilizer</td>
+                                        <td>10 days</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Eastern Kenya</td>
+                                        <td>76 ha</td>
+                                        <td>Soil erosion</td>
+                                        <td>Terracing and cover crops</td>
+                                        <td>30 days</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            
+                            <!-- Expected Impact -->
+                            <div class="card mt-4 bg-light">
+                                <div class="card-body">
+                                    <h6><i class="fas fa-chart-line me-2"></i>Expected Impact of Recommendations</h6>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <h5 class="text-success">+10%</h5>
+                                            <small>Yield increase</small>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <h5 class="text-success">KSh 850,000</h5>
+                                            <small>Additional revenue</small>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <h5 class="text-success">78%</h5>
+                                            <small>ROI on interventions</small>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <h5 class="text-success">12%</h5>
+                                            <small>Water savings</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Export Button -->
+    <button class="btn btn-success export-btn" id="export-full-report">
+        <i class="fas fa-file-export me-2"></i>Export Full Report
+    </button>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4 mt-5">
+        <div class="container text-center">
+            <p>&copy; 2024 Agricultural Analysis System. All rights reserved.</p>
+            <p class="small">Powered by Google Earth Engine | Sentinel-2 Data | Kenya Focus</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://kit.fontawesome.com/your-kit-id.js"></script>
+    <script src="/static/js/analysis.js"></script>
+</body>
+</html>

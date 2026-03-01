@@ -1,0 +1,83 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+pythonenv*
+*.egg-info/
+dist/
+build/
+
+# Virtual Environment
+venv/
+ENV/
+env/
+
+# Flask
+instance/
+.webassets-cache
+.env
+.flaskenv
+*.db
+*.sqlite
+*.sqlite3
+
+# Earth Engine
+*.json
+*.private.key
+service-account.json
+credentials.json
+*.pkl
+*.joblib
+
+# Uploads
+uploads/
+static/maps/
+static/exports/
+static/charts/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Logs
+*.log
+logs/
+
+# Testing
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb
+
+# Large files
+*.dylib
+*.so
+*.dll
+*.exe
+
+# Environment variables
+.env
+
+# Models
+models/*.pkl
+models/*.joblib
+.env

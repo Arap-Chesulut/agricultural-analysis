@@ -1,0 +1,848 @@
+/* ===== Dashboard Specific Styles ===== */
+
+/* Dashboard Layout */
+.dashboard-container {
+    min-height: 100vh;
+    background: var(--light-gradient);
+    padding: var(--spacing-lg) 0;
+}
+
+/* Dashboard Header */
+.dashboard-header {
+    margin-bottom: var(--spacing-2xl);
+}
+
+.dashboard-header h2 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--secondary-dark) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: var(--spacing-xs);
+}
+
+.dashboard-header .breadcrumb {
+    background: transparent;
+    padding: 0;
+}
+
+.dashboard-header .breadcrumb-item {
+    color: var(--gray);
+    font-size: 0.95rem;
+}
+
+.dashboard-header .breadcrumb-item.active {
+    color: var(--primary);
+    font-weight: 500;
+}
+
+/* Sidebar Layout Fixes */
+.col-md-3 .card {
+    margin-bottom: var(--spacing-lg);
+}
+
+.col-md-3 .card:last-child {
+    margin-bottom: 0;
+}
+
+/* Analysis Parameters Card */
+.analysis-params-card {
+    background: white;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+    border: none;
+    margin-bottom: var(--spacing-lg);
+}
+
+.analysis-params-card .card-header {
+    background: var(--primary-gradient);
+    padding: var(--spacing-lg);
+    border: none;
+}
+
+.analysis-params-card .card-header h5 {
+    margin: 0;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.analysis-params-card .card-header i {
+    font-size: 1.3rem;
+}
+
+.analysis-params-card .card-body {
+    padding: var(--spacing-xl);
+}
+
+/* Parameter Groups */
+.param-group {
+    margin-bottom: var(--spacing-xl);
+    border-bottom: 1px solid var(--gray-soft);
+    padding-bottom: var(--spacing-lg);
+}
+
+.param-group:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.param-group-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--gray);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: var(--spacing-md);
+}
+
+/* Draw Tools */
+.draw-tools {
+    display: flex;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-sm);
+}
+
+.draw-tool-btn {
+    flex: 1;
+    padding: 12px;
+    border: 2px solid var(--gray-soft);
+    background: white;
+    border-radius: var(--border-radius-md);
+    color: var(--gray-dark);
+    font-weight: 500;
+    transition: all var(--transition-base);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+}
+
+.draw-tool-btn:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: var(--primary-soft);
+    transform: translateY(-2px);
+}
+
+.draw-tool-btn.active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+}
+
+/* File Upload Area */
+.upload-area {
+    border: 2px dashed var(--gray-light);
+    border-radius: var(--border-radius-md);
+    padding: var(--spacing-lg);
+    text-align: center;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    margin-top: var(--spacing-sm);
+}
+
+.upload-area:hover {
+    border-color: var(--primary);
+    background: var(--primary-soft);
+}
+
+.upload-area i {
+    font-size: 2rem;
+    color: var(--primary);
+    margin-bottom: var(--spacing-sm);
+}
+
+.upload-area p {
+    margin: 0;
+    color: var(--gray-dark);
+    font-size: 0.9rem;
+}
+
+.upload-area small {
+    color: var(--gray);
+    font-size: 0.8rem;
+}
+
+/* Date Range Picker */
+.date-range {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+.date-input {
+    flex: 1;
+}
+
+.date-input label {
+    font-size: 0.8rem;
+    color: var(--gray);
+    margin-bottom: var(--spacing-xs);
+}
+
+/* Analysis Type Selector */
+.analysis-type-selector {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.analysis-option {
+    display: flex;
+    align-items: center;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: 2px solid var(--gray-soft);
+    border-radius: var(--border-radius-md);
+    cursor: pointer;
+    transition: all var(--transition-base);
+}
+
+.analysis-option:hover {
+    border-color: var(--primary);
+    background: var(--primary-soft);
+}
+
+.analysis-option input[type="radio"] {
+    margin-right: var(--spacing-md);
+    accent-color: var(--primary);
+    width: 18px;
+    height: 18px;
+}
+
+.analysis-option label {
+    flex: 1;
+    margin: 0;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.analysis-option i {
+    color: var(--primary);
+    font-size: 1.2rem;
+}
+
+/* Run Analysis Button */
+.run-analysis-btn {
+    background: var(--primary-gradient);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius-md);
+    padding: 14px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    transition: all var(--transition-base);
+    box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+    margin-top: var(--spacing-lg);
+}
+
+.run-analysis-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(46, 125, 50, 0.4);
+}
+
+.run-analysis-btn:active {
+    transform: translateY(0);
+}
+
+.run-analysis-btn i {
+    font-size: 1.2rem;
+}
+
+/* Status Card - Fixed positioning */
+.status-card {
+    background: white;
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-md);
+    margin-top: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+}
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+}
+
+.status-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--success);
+    animation: pulse 2s infinite;
+}
+
+.status-dot.processing {
+    background: var(--warning);
+    animation: pulse 1s infinite;
+}
+
+.status-dot.error {
+    background: var(--danger);
+    animation: none;
+}
+
+.status-text {
+    font-weight: 600;
+    color: var(--dark);
+}
+
+.area-display {
+    background: var(--primary-soft);
+    border-radius: var(--border-radius-md);
+    padding: var(--spacing-md);
+    text-align: center;
+    margin: var(--spacing-md) 0;
+}
+
+.area-display .label {
+    font-size: 0.8rem;
+    color: var(--gray);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.area-display .value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--primary);
+    line-height: 1.2;
+}
+
+.area-display .unit {
+    font-size: 0.9rem;
+    color: var(--gray);
+}
+
+/* Quick Regions - Fixed positioning */
+.quick-regions-card {
+    background: white;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-md);
+    margin-bottom: var(--spacing-lg);
+    overflow: hidden;
+    border: none;
+}
+
+.quick-regions-card .card-header {
+    background: var(--primary-gradient);
+    padding: var(--spacing-md) var(--spacing-lg);
+    border: none;
+}
+
+.quick-regions-card .card-header h5 {
+    margin: 0;
+    color: white;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.quick-regions-card .card-body {
+    padding: var(--spacing-lg);
+}
+
+.region-buttons {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-sm);
+}
+
+.region-btn {
+    padding: 10px 8px;
+    border: 2px solid var(--gray-soft);
+    background: white;
+    border-radius: var(--border-radius-md);
+    color: var(--gray-dark);
+    font-weight: 500;
+    font-size: 0.85rem;
+    transition: all var(--transition-base);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-xs);
+    width: 100%;
+    cursor: pointer;
+}
+
+.region-btn:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: var(--primary-soft);
+    transform: translateY(-2px);
+}
+
+.region-btn i {
+    font-size: 0.9rem;
+    color: var(--primary);
+}
+
+/* Training Data Section */
+.training-section {
+    background: var(--light-soft);
+    border-radius: var(--border-radius-md);
+    padding: var(--spacing-md);
+    margin-top: var(--spacing-lg);
+}
+
+.training-section h6 {
+    color: var(--dark);
+    margin-bottom: var(--spacing-md);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.training-section h6 i {
+    color: var(--primary);
+}
+
+.training-item {
+    margin-bottom: var(--spacing-md);
+}
+
+.training-item label {
+    font-size: 0.8rem;
+    color: var(--gray);
+    margin-bottom: var(--spacing-xs);
+}
+
+/* Map Container */
+.map-container {
+    background: white;
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+    margin-bottom: var(--spacing-lg);
+}
+
+.map-header {
+    background: var(--primary-gradient);
+    padding: var(--spacing-md) var(--spacing-lg);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.map-header h5 {
+    margin: 0;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.map-badge {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 4px 12px;
+    border-radius: 100px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+#map {
+    height: 450px;
+    width: 100%;
+    z-index: 1;
+}
+
+/* Leaflet Draw Toolbar - Fixed icons */
+.leaflet-draw-toolbar {
+    margin-top: 10px !important;
+}
+
+.leaflet-draw-toolbar a {
+    background-image: none !important;
+    background-color: white;
+    width: 34px;
+    height: 34px;
+    line-height: 34px;
+    text-align: center;
+    border-radius: var(--border-radius-sm);
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-fast);
+    position: relative;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
+.leaflet-draw-toolbar a::before {
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    font-size: 1rem;
+    color: var(--primary);
+}
+
+.leaflet-draw-toolbar a.leaflet-draw-draw-polygon::before {
+    content: "\f6fc"; /* Font Awesome polygon icon */
+}
+
+.leaflet-draw-toolbar a.leaflet-draw-draw-rectangle::before {
+    content: "\f45c"; /* Font Awesome rectangle icon */
+}
+
+.leaflet-draw-toolbar a.leaflet-draw-draw-circle::before {
+    content: "\f111"; /* Font Awesome circle icon */
+}
+
+.leaflet-draw-toolbar a.leaflet-draw-draw-marker::before {
+    content: "\f3c5"; /* Font Awesome marker icon */
+}
+
+.leaflet-draw-toolbar a.leaflet-draw-edit-edit::before {
+    content: "\f044"; /* Font Awesome edit icon */
+}
+
+.leaflet-draw-toolbar a.leaflet-draw-edit-remove::before {
+    content: "\f2ed"; /* Font Awesome trash icon */
+}
+
+.leaflet-draw-toolbar a:hover {
+    background-color: var(--primary);
+    transform: scale(1.1);
+}
+
+.leaflet-draw-toolbar a:hover::before {
+    color: white;
+}
+
+/* Leaflet draw toolbar positioning */
+.leaflet-draw.leaflet-control {
+    margin-left: 10px;
+    margin-top: 10px;
+}
+
+.leaflet-draw-actions {
+    margin-left: 40px;
+}
+
+.leaflet-draw-actions a {
+    background-color: var(--primary) !important;
+    color: white !important;
+    font-family: var(--font-family) !important;
+    font-size: 0.8rem !important;
+    padding: 4px 8px !important;
+    height: auto !important;
+    line-height: normal !important;
+}
+
+/* Search Container */
+.search-container {
+    position: relative;
+    padding: var(--spacing-md);
+    background: white;
+    border-bottom: 1px solid var(--gray-soft);
+}
+
+.search-box {
+    width: 100%;
+    padding: 12px 16px 12px 45px;
+    border: 2px solid var(--gray-soft);
+    border-radius: var(--border-radius-md);
+    font-size: 1rem;
+    transition: all var(--transition-base);
+    background: white url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2378909c' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'%3E%3C/circle%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'%3E%3C/line%3E%3C/svg%3E") no-repeat 15px center;
+}
+
+.search-box:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(46, 125, 50, 0.1);
+    outline: none;
+}
+
+.search-results {
+    position: absolute;
+    top: calc(100% - 10px);
+    left: var(--spacing-md);
+    right: var(--spacing-md);
+    max-height: 250px;
+    overflow-y: auto;
+    background: white;
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-lg);
+    z-index: 1000;
+    display: none;
+}
+
+.search-result-item {
+    padding: var(--spacing-sm) var(--spacing-md);
+    cursor: pointer;
+    transition: background var(--transition-fast);
+    border-bottom: 1px solid var(--gray-soft);
+}
+
+.search-result-item:last-child {
+    border-bottom: none;
+}
+
+.search-result-item:hover {
+    background: var(--primary-soft);
+}
+
+/* Agricultural Zones Info - Fixed positioning */
+.agro-zones-card {
+    background: white;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-md);
+    margin-bottom: var(--spacing-lg);
+    overflow: hidden;
+    border: none;
+}
+
+.agro-zones-card .card-header {
+    background: var(--primary-gradient);
+    padding: var(--spacing-md) var(--spacing-lg);
+    color: white;
+    border: none;
+}
+
+.agro-zones-card .card-header h5 {
+    margin: 0;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.agro-zones-card .card-body {
+    padding: var(--spacing-lg);
+}
+
+.agro-zones-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-md);
+}
+
+.zone-card {
+    background: var(--light-soft);
+    border-radius: var(--border-radius-md);
+    padding: var(--spacing-md);
+    transition: transform var(--transition-base);
+    border-left: 3px solid var(--primary);
+}
+
+.zone-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+}
+
+.zone-card h6 {
+    color: var(--primary-dark);
+    margin-bottom: var(--spacing-xs);
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+.zone-card p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--gray-dark);
+}
+
+.zone-card small {
+    color: var(--primary);
+    font-weight: 600;
+    font-size: 0.75rem;
+    display: block;
+    margin-top: var(--spacing-xs);
+}
+
+/* Results Tabs */
+.results-container {
+    background: white;
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+}
+
+.results-tabs {
+    background: var(--primary-gradient);
+    padding: var(--spacing-sm) var(--spacing-lg) 0;
+    border: none;
+}
+
+.results-tabs .nav-link {
+    color: rgba(255, 255, 255, 0.8);
+    border: none;
+    padding: var(--spacing-md) var(--spacing-lg);
+    font-weight: 600;
+    border-radius: var(--border-radius-md) var(--border-radius-md) 0 0;
+    transition: all var(--transition-base);
+}
+
+.results-tabs .nav-link:hover {
+    color: white;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.results-tabs .nav-link.active {
+    color: var(--primary);
+    background: white;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.tab-content-wrapper {
+    padding: var(--spacing-xl);
+}
+
+/* Chart Containers */
+.chart-container {
+    background: white;
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-sm);
+    height: 100%;
+}
+
+.chart-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: var(--spacing-md);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.chart-title .badge {
+    background: var(--primary-soft);
+    color: var(--primary-dark);
+    font-size: 0.7rem;
+}
+
+.stats-panel {
+    background: var(--light-soft);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-lg);
+    height: 100%;
+}
+
+.stats-panel h6 {
+    color: var(--dark);
+    margin-bottom: var(--spacing-md);
+    font-weight: 700;
+}
+
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-sm) 0;
+    border-bottom: 1px dashed var(--gray-soft);
+}
+
+.stat-item:last-child {
+    border-bottom: none;
+}
+
+.stat-label {
+    color: var(--gray-dark);
+    font-size: 0.9rem;
+}
+
+.stat-value {
+    font-weight: 700;
+    color: var(--primary-dark);
+    font-size: 1.1rem;
+}
+
+/* Export Button */
+.export-btn {
+    background: white;
+    border: 2px solid var(--primary);
+    color: var(--primary);
+    padding: 12px 24px;
+    border-radius: var(--border-radius-md);
+    font-weight: 600;
+    transition: all var(--transition-base);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    cursor: pointer;
+}
+
+.export-btn:hover {
+    background: var(--primary);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* Responsive Dashboard */
+@media (max-width: 992px) {
+    .agro-zones-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .region-buttons {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .agro-zones-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .region-buttons {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .results-tabs .nav-link {
+        padding: var(--spacing-sm) var(--spacing-md);
+        font-size: 0.9rem;
+    }
+    
+    .leaflet-draw-toolbar {
+        margin-top: 5px !important;
+    }
+    
+    .leaflet-draw-toolbar a {
+        width: 30px;
+        height: 30px;
+        line-height: 30px;
+    }
+}
+
+@media (max-width: 576px) {
+    .region-buttons {
+        grid-template-columns: 1fr;
+    }
+    
+    .agro-zones-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .draw-tools {
+        flex-direction: column;
+    }
+    
+    .date-range {
+        flex-direction: column;
+    }
+    
+    .leaflet-draw-toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+    
+    .leaflet-draw-actions {
+        margin-left: 0;
+        margin-top: 35px;
+    }
+}
